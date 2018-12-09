@@ -8,35 +8,44 @@ namespace MyFirstWebApi.Business
 {
     public class ProductBusiness
     {
-        private List<Product> _Products = new List<Product>() {
-            new Product {ProductId =1,ProductName ="Product 1", Price = 10.00 },
-                 new Product {ProductId =2,ProductName ="Product 2", Price = 10.00 } ,
-                      new Product {ProductId =3,ProductName ="Product 3", Price = 10.00 }         
-        };
+        //private List<Product> _Products = new List<Product>() {
+        //    new Product {ProductId =1,ProductName ="Product 1", Price = 10.00 },
+        //         new Product {ProductId =2,ProductName ="Product 2", Price = 10.00 } ,
+        //              new Product {ProductId =3,ProductName ="Product 3", Price = 10.00 }         
+        //};
         public List<Product> GetProducts() {
-            return _Products;
+            using (ProductsDataContext db=new ProductsDataContext())
+            {
+                return db.Product.ToList();
+            }
         }
         public Product GetProduct(int id) {
 
-            return _Products.FirstOrDefault(p => p.ProductId == id);
-
-            //Product product = new Product();
-            //foreach (var prod in _Products)
-            //{
-            //    if (prod.ProductId ==id)
-            //    {
-            //        product = prod;
-            //    }
-            //}
-            //return product;
+            using (ProductsDataContext db = new ProductsDataContext())
+            {
+                return db.Product.FirstOrDefault(p =>p.ProductId== id);
+            }
         }
         public bool Create(Product product)
         {
-           int maxId = _Products.Max(p => p.ProductId);
-            product.ProductId = maxId++;
-
-            _Products.Add(product);
-            return true;
+            //int maxId = _Products.Max(p => p.ProductId);
+            // product.ProductId = maxId++;
+            bool success = false;
+            try
+            {
+                using (ProductsDataContext db=new ProductsDataContext())
+                {
+                    db.Product.Add(product);
+                    db.SaveChanges();
+                    success = true;
+                }
+            }
+            catch (Exception)
+            {
+               
+                throw;
+            }
+            return success;          
         }
 
     }
