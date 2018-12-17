@@ -13,11 +13,13 @@ namespace MyFirstWebApi.Controllers
     public class ProductController : ApiController
     {
         private ProductBusiness _ProductBusiness = new ProductBusiness();
+        [HttpGet]
         [Route("GetProducts")]
         public IHttpActionResult GetProducts() {
             var products = _ProductBusiness.GetProducts();
             return Ok(products);
         }
+        [HttpGet]
         [Route("GetProduct/{id}")]
         public IHttpActionResult GetProduct(int id)
         {
@@ -28,6 +30,7 @@ namespace MyFirstWebApi.Controllers
             var product = _ProductBusiness.GetProduct(id);
             return Ok(product);
         }
+        [HttpPost]
         [Route("Create")]
         public IHttpActionResult Create(Product product)
         {
